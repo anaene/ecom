@@ -1,5 +1,11 @@
 {% extends 'webstore/base.html' %}
 
 {% block content %}
-    <h1>Hello World</h1>
+    <div class="products">
+        {# TODO add select option later and update paginated items with ajax #}
+        <div class="paginated-products row">
+            {% include 'webstore/products/paginated-products.html' with product=products %}
+        </div>
+        {% include 'webstore/products/pagination.html' %}
+    </div>
 {% endblock content %}

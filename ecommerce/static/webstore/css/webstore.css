@@ -1,0 +1,129 @@
+/* Extra small devices (phones, 600px and down) */
+.container-fluid {
+    max-width: 1920px;
+}
+
+/*navigation rules*/
+.site-nav, .site-footer {
+    background-color: #1d3557;
+}
+
+.site-footer {
+    height: 4em;
+}
+
+.input-group {
+    justify-content: center;
+}
+
+.search-button {
+    background-color: #f1faee;
+}
+
+.nav-image {
+    height: 1.38em;
+    display: inline-block;
+}
+
+.cart {
+    border: 1px solid #1d3557;
+    display: flex;
+}
+
+.cart:hover {
+    border: 1px solid #f1faee;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.cart-item:last-child {
+    margin-left: 5px;
+}
+
+#cart-total {
+    background-color: #e63946;
+    color: #1d3557;
+    padding: 0 5px;
+    border-radius: 5px;
+}
+
+.cart:hover > #cart-total {
+    color: white;
+}
+
+/* home page, paginated rules*/
+
+.paginated-products {
+    margin: 0 auto;
+}
+
+.card-img-top {
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: contain;
+}
+
+.card-body {
+    background-color: rgba(241, 250, 238, 0.3);
+    opacity: .7;
+}
+
+.product-link:hover {
+    text-decoration: none;
+}
+
+/*product section*/
+.product-image {
+    max-height: 300px;
+}
+
+hr {
+    background-color: rgba(168, 218, 220, 0.6);
+}
+
+.product-section > .row > div {
+    border-right: 1px solid rgba(168, 218, 220, 0.6);
+}
+
+.product-section > .row > div:last-child {
+    border: none;
+}
+
+/*forms*/
+
+.form-container {
+    border: 1px solid #a8dadc;
+    padding: 1.4em;
+    border-radius: 2%;
+}
+
+@media only screen and (max-width: 600px) {
+    .product-section > .row > div {
+        border: none;
+    }
+
+    .product-section > .row > div:nth-child(2) {
+        border-bottom: 1px solid rgba(168, 218, 220, 0.6);
+    }
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .search {
+        width: 31em !important;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+}
