@@ -1,5 +1,5 @@
 {% for product in  products %}
-    <div class="col-lg-3 justify-content-center mb-3 col-md-4 col-10 offset-1 offset-md-0">
+    <div class="col-lg-2 justify-content-center mb-3 col-md-3 col-8 offset-2 offset-md-0">
         <a class='product-link' href="{% url 'product' product.id %}">
             <div class="card">
                 <img class="card-img-top pt-3" src="media/{{ product.image }}" alt="">
@@ -7,8 +7,7 @@
                     <h6 class="card-title text-center">{{ product.name }}</h6>
                     <div class="row mr-2 ml-2">
                         {#  TODO change later to convert price to localized rate#}
-                        <p class="col-12 col-lg-5">£{{ product.price }}</p>
-                        <button class="col-12 col-lg-7 btn btn-dark">Add to Cart</button>
+                        <p class="offset-4">£{{ product.price }}</p>
                     </div>
                 </div>
             </div>

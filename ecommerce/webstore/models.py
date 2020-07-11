@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -56,7 +58,7 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
 
     class OrderStatus(models.TextChoices):
         PROCESSING = 'processing',
@@ -66,8 +68,8 @@ class Order(models.Model):
 
     order_status = models.CharField(max_length=12, choices=OrderStatus.choices, default=OrderStatus.PROCESSING)
     order_date = models.DateTimeField(auto_now_add=True)
-    transaction_id = models.CharField(max_length=100, unique=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    transaction_id = models.CharField(max_length=100, unique=True, default=uuid.uuid4)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return 'transaction no: {}'.format(self.transaction_id)

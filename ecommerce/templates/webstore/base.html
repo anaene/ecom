@@ -45,7 +45,12 @@
                 <li class="nav-item">
                     <p class="nav-link m-0 cart">
                         <img src="{% static 'webstore/images/cart.png'%}" alt="cart" class="nav-image cart-item">
-                        <span class="cart-item" id="cart-total">0</span>
+                        <span class="cart-item" id="cart-total">
+                            {% if 'cart_total' in request.session %}
+                                {{ request.session.cart_total }}
+                            {% else %}
+                                {{ 0 }}
+                            {% endif %}</span>
                     </p>
                 </li>
             </ul>

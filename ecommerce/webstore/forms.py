@@ -10,4 +10,15 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        fields = ['first_name', 'last_name', 'email','street', 'city', 'postcode']
+        fields = ['first_name', 'last_name', 'email', 'street', 'city', 'postcode']
+
+
+class QuantityForm(forms.Form):
+    CHOICES = (
+        ('1', 1),
+        ('2', 2),
+        ('3', 3),
+        ('4', 4),
+        ('5', 5)
+    )
+    quantity = forms.ChoiceField(widget=forms.Select, choices=CHOICES)

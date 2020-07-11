@@ -1,11 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
 # Create your views here.
 # home, account,
-from webstore.forms import CustomerForm
-from webstore.models import Product
+from webstore.forms import CustomerForm, QuantityForm
+from webstore.models import Product, Order, OrderProduct
 
 
 def index(request):
@@ -45,4 +46,49 @@ def register(request):
 
 def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
-    return render(request, 'webstore/products/product.html', {'product': product})
+    quantity_form = QuantityForm()
+
+    context = {'product': product, 'quantity_form': quantity_form}
+    return render(request, 'webstore/products/product.html', context)
+
+
+def add_to_cart(request, product_id):
+    quantity_form = QuantityForm(request.POST)
+    quantity = quantity_form['quantity'].value()
+    product = get_object_or_404(Product, pk=product_id)
+    order = get_order(request)
+    update_order(order, product, quantity)
+    request.session['cart_total'] = update_cart_total(order).__str__()
+    return redirect(index)
+
+
+def get_order(request):
+    # check cart total exists for session else create new order assign order number and total to session variables
+    if 'cart_order' in request.session:
+        order = get_object_or_404(Order, pk=request.session['cart_order'])
+    else:
+        order = Order()
+        order.save()
+        request.session['cart_order'] = order.id
+
+    return order
+
+
+def update_order(order, product, quantity):
+    try:
+        order_product = get_object_or_404(OrderProduct, order=order, product=product)
+        order_product.quantity += int(quantity)
+
+    except Http404:
+        order_product = OrderProduct(order=order, product=product, quantity=int(quantity))
+
+    order_product.save()
+
+
+def update_cart_total(order):
+    products = get_list_or_404(OrderProduct, order=order)
+    cart_total = 0
+    for product in products:
+        cart_total += product.quantity
+
+    return cart_total

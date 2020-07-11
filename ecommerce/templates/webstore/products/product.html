@@ -15,8 +15,21 @@
                 <p>{{ product.description }}</p>
             </div>
             <div class="col-xl-4 p-5 col-11 col-md-6">
-                <p class="text-center">£{{ product.price }}</p>
-                <button class="btn btn-dark w-100">Add to Cart</button>
+                <form action="{% url 'add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <p class="offset-4">
+                        <label for="{{ quantity_form.quantity.id_for_label }}">Quantity: </label>
+                        <select name="{{ quantity_form.quantity.html_name }}"
+                                id="{{ quantity_form.quantity.id_for_label }}"
+                                class="custom-select offset-1 col-3">
+                            {% for choice in quantity_form.quantity %}
+                                {{ choice }}
+                            {% endfor %}
+                        </select>
+                    </p>
+                    <p class="offset-4">£ <span id="price">{{ product.price }}</span></p>
+                    <button type="submit" class="btn btn-dark w-100">Add to Cart</button>
+                </form>
             </div>
         </div>
     </div>

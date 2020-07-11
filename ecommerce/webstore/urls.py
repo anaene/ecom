@@ -11,5 +11,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password_reset/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset'),
     path('register/', register, name='register'),
-    path('products/<int:product_id>/', product_details, name='product')
+    path('products/<int:product_id>/', product_details, name='product'),
+    path('add/<int:product_id>/', add_to_cart, name='add')
 ]
