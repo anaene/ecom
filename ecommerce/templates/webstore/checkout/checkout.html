@@ -1,0 +1,28 @@
+{% extends 'webstore/base.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'webstore/css/checkout.css' %}">
+{% endblock styles %}
+{% block content %}
+    {% if no_items %}
+        {#   TODO add redirect to homepage and maybe a small list of suggested items to view #}
+        <h1>{{ no_items }}</h1>
+
+    {% else %}
+        <div class="row">
+            {% include 'webstore/checkout/order-products.html' with order_products=order_products %}
+            <div class="col-md-3 card">
+                <div>
+                    <h6 class="card-subtitle">£<span id="total">{{ order.get_total }}</span></h6>
+                    <a href="{% url 'confirm_checkout' %}" class="btn btn-dark">Proceed To Checkout</a>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock content %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'webstore/js/webstore.js' %}"></script>
+{% endblock scripts %}

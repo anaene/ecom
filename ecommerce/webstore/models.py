@@ -74,12 +74,30 @@ class Order(models.Model):
     def __str__(self):
         return 'transaction no: {}'.format(self.transaction_id)
 
+    def get_total(self):
+        order_products = OrderProduct.objects.filter(order=self)
+        return sum([op.subtotal for op in order_products])
+
 
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+
+    QUANTITY_OPTIONS = (
+        ('1', 1),
+        ('2', 2),
+        ('3', 3),
+        ('4', 4),
+        ('5', 5),
+    )
+
+    quantity = models.IntegerField(choices=QUANTITY_OPTIONS, default=1)
+    subtotal = models.DecimalField(decimal_places=2, default=0.00, max_digits=10)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.subtotal = self.product.price * self.quantity
 
     class Meta:
         verbose_name_plural = 'Order Products'

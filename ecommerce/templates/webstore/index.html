@@ -1,9 +1,9 @@
 {% extends 'webstore/base.html' %}
 {% block content %}
     <div class="products">
-        {# TODO add select option later and update paginated items with ajax #}
+        {# TODO add select options (bestseller, newest, a-z, etc...) later and update paginated items #}
         <div class="paginated-products row">
-            {% include 'webstore/products/paginated-products.html' with product=products %}
+            {% include 'webstore/products/paginated-products.html' with products=products %}
         </div>
         {% include 'webstore/products/pagination.html' %}
     </div>

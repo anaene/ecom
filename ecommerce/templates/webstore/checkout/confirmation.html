@@ -1,0 +1,55 @@
+{% extends 'webstore/base.html' %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'webstore/css/checkout.css' %}">
+{% endblock styles %}
+
+{% block content %}
+    {% if order %}
+        <div class="offset-md-1">
+            <form action="" method="post">
+                <div class="col-md-7">
+                    <div>
+                        <div class="form-group">
+                            <label for="{{ address_form.street.id_for_label }}"></label>
+                            <input type="text" placeholder="{{ address_form.street.name }}"
+                                   id="{{ address_form.street.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ address_form.city.id_for_label }}"></label>
+                            <input type="text" placeholder="{{ address_form.city.name }}"
+                                   id="{{ address_form.city.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ address_form.postcode.id_for_label }}"></label>
+                            <input type="text" placeholder="{{ address_form.postcode.name }}"
+                                   id="{{ address_form.postcode.id_for_label }}" class="form-control">
+                        </div>
+                        {% if order.customer.primary_address %}
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="defaultAddress">
+                                        <input class="form-check-input" type="checkbox" id="defaultAddress"
+                                               onchange="getAddress(this)">Default
+                                        Address</label>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-5 row offset-md-2">
+                    <h6 class="card-subtitle mr-4">£<span id="total">{{ order.get_total }}</span></h6>
+                    <button type="submit" class="btn btn-dark" id="complete-purchase">Buy</button>
+                </div>
+                {% include 'webstore/checkout/order-products.html' with order_products=order_products %}
+            </form>
+        </div>
+    {% endif %}
+{% endblock content %}
+
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'webstore/js/webstore.js' %}"></script>
+{% endblock %}

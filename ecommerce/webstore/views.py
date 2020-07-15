@@ -1,12 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
 # Create your views here.
 # home, account,
-from webstore.forms import CustomerForm, QuantityForm
-from webstore.models import Product, Order, OrderProduct
+from webstore.forms import CustomerForm, QuantityForm, AddressForm
+from webstore.models import Product, Order, OrderProduct, Customer
 
 
 def index(request):
@@ -52,12 +53,13 @@ def product_details(request, product_id):
     return render(request, 'webstore/products/product.html', context)
 
 
+# add to cart functions
 def add_to_cart(request, product_id):
     quantity_form = QuantityForm(request.POST)
     quantity = quantity_form['quantity'].value()
     product = get_object_or_404(Product, pk=product_id)
     order = get_order(request)
-    update_order(order, product, quantity)
+    add_to_order(order, product, quantity)
     request.session['cart_total'] = update_cart_total(order).__str__()
     return redirect(index)
 
@@ -74,10 +76,11 @@ def get_order(request):
     return order
 
 
-def update_order(order, product, quantity):
+def add_to_order(order, product, quantity):
     try:
         order_product = get_object_or_404(OrderProduct, order=order, product=product)
-        order_product.quantity += int(quantity)
+        if order_product.quantity < 5 and order_product.quantity + quantity <= 5:
+            order_product.quantity += int(quantity)
 
     except Http404:
         order_product = OrderProduct(order=order, product=product, quantity=int(quantity))
@@ -92,3 +95,63 @@ def update_cart_total(order):
         cart_total += product.quantity
 
     return cart_total
+
+
+# checkout functions
+def checkout(request):
+    if 'cart_order' not in request:
+        get_order(request)
+    try:
+        pk = request.session['cart_order']
+        order = get_object_or_404(Order, pk=pk)
+        order_products = get_list_or_404(OrderProduct, order=order)
+        context = {'order_products': order_products, 'range': range(1, 6), 'order': order}
+
+    except Http404:
+        context = {'no_items': 'No Items in Cart'}
+    return render(request, 'webstore/checkout/checkout.html', context)
+
+
+def update_order_product(request):
+    order_product = get_object_or_404(OrderProduct, pk=request.GET.get('orderProductId'))
+    order_product.quantity = request.GET.get('quantity')
+    order_product.save()
+    order_product.refresh_from_db()
+    data = {'subtotal': order_product.subtotal, 'total': order_product.order.get_total()}
+    return JsonResponse(data)
+
+
+def remove_cart_product(request, product_id):
+    order_product = get_object_or_404(OrderProduct, pk=product_id)
+    order_product.delete()
+    return redirect(checkout)
+
+
+@login_required(redirect_field_name='next')
+def process_checkout(request):
+    try:
+        order = get_object_or_404(Order, pk=request.session['cart_order'])
+        customer = get_object_or_404(Customer, user=request.user)
+        order.customer = customer
+        order.save()
+        order.refresh_from_db()
+        order_products = get_list_or_404(OrderProduct, order=order)
+        address_form = AddressForm()
+        context = {'order': order, 'address_form': address_form, 'order_products': order_products, 'range': range(1, 6)}
+    except Http404:
+        context = {}
+
+    return render(request, 'webstore/checkout/confirmation.html', context)
+
+
+def get_customer_address(request):
+    if request.user.is_authenticated:
+        customer = get_object_or_404(Customer, user=request.user)
+        street = customer.primary_address.street
+        city = customer.primary_address.city
+        postcode = customer.primary_address.postcode
+        data = {'street': street, 'postcode': postcode, 'city': city}
+    else:
+        data = {}
+
+    return JsonResponse(data)

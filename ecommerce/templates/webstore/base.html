@@ -35,23 +35,28 @@
                 </div>
             </div>
             <ul class="navbar-nav ml-auto mr-3">
-                <li class="nav-item">
-                    {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
                         <a href="{% url 'account' %}" class="nav-link">Account</a>
-                    {% else %}
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
                         <a href="{% url 'login' %}" class="nav-link">Login</a>
-                    {% endif %}
-                </li>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
-                    <p class="nav-link m-0 cart">
-                        <img src="{% static 'webstore/images/cart.png'%}" alt="cart" class="nav-image cart-item">
+                    <a class="nav-link m-0 cart" href="{% url 'checkout' %}">
+                        <img src="{% static 'webstore/images/cart.png' %}" alt="cart" class="nav-image cart-item">
                         <span class="cart-item" id="cart-total">
                             {% if 'cart_total' in request.session %}
                                 {{ request.session.cart_total }}
                             {% else %}
                                 {{ 0 }}
                             {% endif %}</span>
-                    </p>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -74,5 +79,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+{% block scripts %}
+{% endblock scripts %}
 </body>
 </html>

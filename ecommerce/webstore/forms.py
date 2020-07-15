@@ -1,6 +1,6 @@
 from django import forms
 
-from webstore.models import Address
+from webstore.models import Address, OrderProduct
 
 
 class CustomerForm(forms.ModelForm):
@@ -22,3 +22,15 @@ class QuantityForm(forms.Form):
         ('5', 5)
     )
     quantity = forms.ChoiceField(widget=forms.Select, choices=CHOICES)
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+class OrderProductForm(forms.ModelForm):
+    class Meta:
+        model = OrderProduct
+        fields = '__all__'

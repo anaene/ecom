@@ -1,0 +1,43 @@
+<div class="col-md-7">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Items</h5>
+        </div>
+        <ul class="list-group">
+            {% for order_product in order_products %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <img src="{{ order_product.product.image.url }}"
+                                 alt="{{ order_product.product.name }}"
+                                 class="img-fluid">
+                        </div>
+                        <div class="col-md-9">
+                            <h6 class="card-subtitle">{{ order_product.product.name }}</h6>
+                            <p>£<span
+                                    id="subtotal_{{ order_product.id }}">{{ order_product.subtotal }}</span>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>
+                                        <label for="{{ order_product.id }}">Quantity:</label>
+                                        <select name="{{ order_product.product.name }}"
+                                                id="{{ order_product.id }}" class="custom-select col-md-4"
+                                                data-url="{% url 'update_product' %}"
+                                                onchange="updatePrice(this)">
+                                            {% for i in range %}
+                                                <option value="{{ i }}"
+                                                        {% if i == order_product.quantity %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

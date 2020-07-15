@@ -12,5 +12,10 @@ urlpatterns = [
     path('password_reset/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset'),
     path('register/', register, name='register'),
     path('products/<int:product_id>/', product_details, name='product'),
-    path('add/<int:product_id>/', add_to_cart, name='add')
+    path('add/<int:product_id>/', add_to_cart, name='add'),
+    path('checkout/', checkout, name='checkout'),
+    path('remove/<int:product_id>', remove_cart_product, name='remove'),
+    path('update/order/product/', update_order_product, name='update_product'),
+    path('checkout/confirmation', process_checkout, name='confirm_checkout'),
+    path('address/', get_customer_address, name='get_address')
 ]
